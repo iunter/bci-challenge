@@ -1,0 +1,10 @@
+version: '3'
+services:
+  bci-evaluacion:
+    build: .
+    container_name: 'bci-evaluacion'
+    ports:
+      - 8080:8080
+networks:
+  db:
+  backend:
