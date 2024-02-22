@@ -1,20 +1,27 @@
 package com.ivan.bci.evaluacion.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
-@Entity
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.Table;
+
+@Entity(name = "phones")
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
 @Table(name = "phones")
+@Getter
+@Setter
 @ApiModel
 public class Phone
 {
@@ -25,7 +32,8 @@ public class Phone
 
     private int countryCode;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
+
 }

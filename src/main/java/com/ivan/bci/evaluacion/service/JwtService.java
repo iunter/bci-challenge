@@ -18,16 +18,15 @@ import java.util.function.Function;
 @Component
 public class JwtService
 {
-	@Value("${SECRET_KEY}")
-	private String SECRET_KEY;
+	private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
 	@Value("${jwt.duration}")
 	private int EXPIRATION;
 
-	public String generateToken(String userName)
+	public String generateToken(String email)
 	{
 		Map<String, Object> claims = new HashMap<>();
-		return createToken(claims, userName);
+		return createToken(claims, email);
 	}
 
 	public String extractEmail(String token)
@@ -68,8 +67,7 @@ public class JwtService
 
 	private Key getSignKey()
 	{
-		byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-		return Keys.hmacShaKeyFor(keyBytes);
+		return Keys.hmacShaKeyFor(SECRET_KEY.getEncoded());
 	}
 
 	private Boolean isTokenExpired(String token)

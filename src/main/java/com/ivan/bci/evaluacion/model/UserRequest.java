@@ -2,6 +2,7 @@ package com.ivan.bci.evaluacion.model;
 
 
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,6 +16,7 @@ import java.util.List;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel
 public class UserRequest
 {
 
@@ -24,6 +26,6 @@ public class UserRequest
 
     private String password;
 
-    private List<Phone> phoneList;
+    private List<Phone> phones;
 
 }
