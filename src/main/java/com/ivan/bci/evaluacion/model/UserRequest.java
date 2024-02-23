@@ -4,6 +4,7 @@ package com.ivan.bci.evaluacion.model;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @ApiModel
 public class UserRequest
 {

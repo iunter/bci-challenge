@@ -28,7 +28,7 @@ public class UserService
 	@Autowired
 	private JwtService jwtService;
 
-	private String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+	private final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
 	@Value("${PASSWORD_REGEX}")
 	private String PASSWORD_REGEX;

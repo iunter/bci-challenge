@@ -3,8 +3,10 @@ package com.ivan.bci.evaluacion.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -19,9 +21,11 @@ import javax.persistence.Table;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "phones")
 @Getter
 @Setter
+@Builder
 @ApiModel
 public class Phone
 {
