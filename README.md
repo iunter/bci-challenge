@@ -9,12 +9,12 @@ PASSWORD_REGEX
 Archivo de ejemplo **ENV_EXAMPLE** (Es posible cambiar el nombre y 
 utilizar directamente).
 
-Una vez creado el archivo ya es posible correr el proyecto colocandose en el
+Una vez creado el archivo ya es posible correr el proyecto colocándose en el
 directorio base e ingresando en consola el siguiente comando
 ``` powershell
 ./mvnw spring-boot:run
 ```
-Una vez comenzada la aplicacion se abrirá en el puerto 8080.
+Una vez comenzada la aplicación se abrirá en el puerto 8080.
 
 No es necesario correr ningún script para popular la base de datos.
 
