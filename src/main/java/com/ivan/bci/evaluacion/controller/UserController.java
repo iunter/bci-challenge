@@ -5,6 +5,9 @@ import com.ivan.bci.evaluacion.model.UserRequest;
 import com.ivan.bci.evaluacion.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
@@ -25,11 +28,23 @@ public class UserController
     @Autowired
     private UserService userService;
 
+    /**
+     * Endpoint post para la creación de un usuario
+     *
+     * @param userRequest request de creación de usuario
+     * @return json con usuario creado o mensaje de error
+     */
     @Operation(summary = "Crea un nuevo usuario", description = "Retorna un nuevo usuario")
     @PostMapping
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Usuario creado con exito"),
-            @ApiResponse(responseCode = "400", description = "Hubo un error (mal contraseña, mail o usuario ya existente")
+            @ApiResponse(
+                    responseCode = "200", description = "Usuario creado con exito",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = User.class))}
+            ),
+            @ApiResponse(responseCode = "400", description = "Hubo un error (mal contraseña, mail o usuario ya existente. \n" +
+                    "El body del response tendrá el siguiente formato {\"mensaje\": \"mensaje de error\"}",
+                    content = {@Content(mediaType = "application/json", examples = @ExampleObject(value = "{\"mensaje\": \"mensaje de error\"}"))}
+            )
     })
     public ResponseEntity<Object> newUser(
             @RequestBody
@@ -39,7 +54,7 @@ public class UserController
         try
         {
             User user = userService.addUser(userRequest);
-            return ResponseEntity.status(HttpStatus.CREATED).body(user);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
         } catch (Exception e)
         {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage(e.getMessage()));

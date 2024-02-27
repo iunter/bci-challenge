@@ -28,11 +28,17 @@ public class UserService
 	@Autowired
 	private JwtService jwtService;
 
-	private final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+	private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
 	@Value("${PASSWORD_REGEX}")
 	private String PASSWORD_REGEX;
 
+	/**
+	 *
+	 * @param userRequest request para la creación de usuario
+	 * @return Usuario creado
+	 * @throws UserServiceException si hay un error (usuario ya existente, correo o password con formato inválido)
+	 */
 	public User addUser(UserRequest userRequest)
 	{
 		User user = userRepository.findByEmail(userRequest.getEmail());
@@ -44,7 +50,7 @@ public class UserService
 
 		if (!validateRegex(userRequest.getEmail(), EMAIL_REGEX))
 		{
-			throw new UserServiceException("El correo no tiene un formato valido");
+			throw new UserServiceException("El correo no tiene un formato válido");
 		}
 
 		if (!validateRegex(userRequest.getPassword(), PASSWORD_REGEX))

@@ -1,6 +1,7 @@
-package com.ivan.bci.evaluacion.controller;
+package com.ivan.bci.evaluacion.service;
 
 
+import com.ivan.bci.evaluacion.controller.UserController;
 import com.ivan.bci.evaluacion.model.UserRequest;
 import com.ivan.bci.evaluacion.service.UserService;
 import org.junit.jupiter.api.Test;

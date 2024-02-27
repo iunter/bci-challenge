@@ -4,7 +4,6 @@ import com.ivan.bci.evaluacion.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,6 +22,10 @@ public class JwtService
 	@Value("${jwt.duration}")
 	private int EXPIRATION;
 
+	/**
+	 * @param email del usuario para generar el token
+	 * @return token JWT para administrar la sesión del usuario
+	 */
 	public String generateToken(String email)
 	{
 		Map<String, Object> claims = new HashMap<>();

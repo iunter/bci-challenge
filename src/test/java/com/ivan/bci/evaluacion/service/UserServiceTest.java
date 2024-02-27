@@ -143,7 +143,7 @@ public class UserServiceTest
 
 
 		Exception exception = Assertions.assertThrows(Exception.class, () -> userService.addUser(userRequest));
-		Assertions.assertEquals(exception.getMessage(), "El correo no tiene un formato valido");
+		Assertions.assertEquals(exception.getMessage(), "El correo no tiene un formato válido");
 
 	}
 
