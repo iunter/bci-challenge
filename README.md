@@ -12,7 +12,7 @@ utilizar directamente).
 Una vez creado el archivo ya es posible correr el proyecto colocándose en el
 directorio base e ingresando en consola el siguiente comando
 ``` powershell
-./mvnw spring-boot:run
+./gradlew bootRun
 ```
 Una vez comenzada la aplicación se abrirá en el puerto 8080.
 
