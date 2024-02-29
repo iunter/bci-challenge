@@ -46,6 +46,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
     implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"
     implementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
+    implementation 'org.modelmapper:modelmapper:2.1.1'
 }
 
 group = 'com.ivan.bci'

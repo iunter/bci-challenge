@@ -1,8 +1,8 @@
 package com.ivan.bci.evaluacion.service;
 
-import com.ivan.bci.evaluacion.model.Phone;
-import com.ivan.bci.evaluacion.model.User;
-import com.ivan.bci.evaluacion.model.UserRequest;
+import com.ivan.bci.evaluacion.model.PhoneModel;
+import com.ivan.bci.evaluacion.model.UserModel;
+import com.ivan.bci.evaluacion.dto.UserRequestDto;
 import com.ivan.bci.evaluacion.repository.IPhoneRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.ivan.bci.evaluacion.repository.IUserRepository;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -35,31 +36,31 @@ public class UserService
 
 	/**
 	 *
-	 * @param userRequest request para la creación de usuario
+	 * @param userRequestDto request para la creación de usuario
 	 * @return Usuario creado
 	 * @throws UserServiceException si hay un error (usuario ya existente, correo o password con formato inválido)
 	 */
-	public User addUser(UserRequest userRequest)
+	public UserModel addUser(UserRequestDto userRequestDto)
 	{
-		User user = userRepository.findByEmail(userRequest.getEmail());
+		UserModel userModel = userRepository.findByEmail(userRequestDto.getEmail());
 
-		if (user != null)
+		if (userModel != null)
 		{
 			throw new UserServiceException("El correo ya ha sido registrado");
 		}
 
-		if (!validateRegex(userRequest.getEmail(), EMAIL_REGEX))
+		if (!validateRegex(userRequestDto.getEmail(), EMAIL_REGEX))
 		{
 			throw new UserServiceException("El correo no tiene un formato válido");
 		}
 
-		if (!validateRegex(userRequest.getPassword(), PASSWORD_REGEX))
+		if (!validateRegex(userRequestDto.getPassword(), PASSWORD_REGEX))
 		{
 			throw new UserServiceException("La contraseña no cumple con los requerimientos");
 		}
 
 
-		return populateUser(userRequest);
+		return populateUser(userRequestDto);
 	}
 
 	private boolean validateRegex(String string, String regex)
@@ -67,35 +68,35 @@ public class UserService
 		return string.matches(regex);
 	}
 
+	private UserModel populateUser(UserRequestDto userRequestDto)
+	{
+		UserModel userModel = UserModel.builder()
+				.name(userRequestDto.getName())
+				.email(userRequestDto.getEmail())
+				.password(userRequestDto.getPassword())
+				.phoneList(userRequestDto.getPhones())
+				.created(new Date())
+				.modified(new Date())
+				.token(jwtService.generateToken(userRequestDto.getEmail()))
+				.build();
+
+		UserModel newUserModel = userRepository.save(userModel);
+
+		List<PhoneModel> phoneModelList = userModel.getPhoneList();
+
+		phoneModelList.forEach(phoneModel ->
+			{
+				phoneModel.setUser(newUserModel);
+				phoneRepository.save(phoneModel);
+			});
+
+		return newUserModel;
+	}
+
 	class UserServiceException extends RuntimeException {
 		UserServiceException(String message) {
 			super(message);
 		}
-	}
-
-	private User populateUser(UserRequest userRequest)
-	{
-		User user = User.builder()
-				.name(userRequest.getName())
-				.email(userRequest.getEmail())
-				.password(userRequest.getPassword())
-				.phoneList(userRequest.getPhones())
-				.created(new Date())
-				.modified(new Date())
-				.lastLogin(new Date())
-				.token(jwtService.generateToken(userRequest.getEmail()))
-				.isActive(true)
-				.build();
-
-		User newUser = userRepository.save(user);
-
-		for (Phone phone : user.getPhoneList())
-		{
-			phone.setUser(newUser);
-			phoneRepository.save(phone);
-		}
-
-		return newUser;
 	}
 
 

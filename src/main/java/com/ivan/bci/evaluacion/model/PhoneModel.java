@@ -29,7 +29,7 @@ import javax.persistence.Table;
 @Setter
 @Builder
 @ApiModel
-public class Phone
+public class PhoneModel
 {
     @Id
     @Schema(name = "Numero de telefono", example = "12345678", required = true)
@@ -43,6 +43,6 @@ public class Phone
 
     @JsonIgnore
     @ManyToOne
-    private User user;
+    private UserModel user;
 
 }

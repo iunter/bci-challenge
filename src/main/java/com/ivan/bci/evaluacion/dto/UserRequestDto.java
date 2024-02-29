@@ -1,7 +1,8 @@
-package com.ivan.bci.evaluacion.model;
+package com.ivan.bci.evaluacion.dto;
 
 
 
+import com.ivan.bci.evaluacion.model.PhoneModel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @ApiModel
-public class UserRequest
+public class UserRequestDto
 {
     @Schema(name = "Nombre del usuario", example = "Juan Gomez", required = true)
     private String name;
@@ -35,6 +36,6 @@ public class UserRequest
     private String password;
 
     @Schema(name = "Numeros de telefono pertenecientes al usuario", required = true)
-    private List<Phone> phones;
+    private List<PhoneModel> phones;
 
 }

@@ -1,6 +1,6 @@
 package com.ivan.bci.evaluacion.service;
 
-import com.ivan.bci.evaluacion.model.User;
+import com.ivan.bci.evaluacion.model.UserModel;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -78,8 +78,8 @@ public class JwtService
 		return extractExpiration(token).before(new Date());
 	}
 
-	public Boolean validateToken(String token, User user) {
+	public Boolean validateToken(String token, UserModel userModel) {
 		final String email = extractEmail(token);
-		return (email.equals(user.getEmail()) && !isTokenExpired(token));
+		return (email.equals(userModel.getEmail()) && !isTokenExpired(token));
 	}
 }
