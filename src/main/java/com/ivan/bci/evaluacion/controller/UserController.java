@@ -3,8 +3,8 @@ package com.ivan.bci.evaluacion.controller;
 import com.ivan.bci.evaluacion.dto.UserResponseDto;
 import com.ivan.bci.evaluacion.model.UserModel;
 import com.ivan.bci.evaluacion.dto.UserRequestDto;
-import com.ivan.bci.evaluacion.service.JwtService;
-import com.ivan.bci.evaluacion.service.UserService;
+import com.ivan.bci.evaluacion.service.IJwtService;
+import com.ivan.bci.evaluacion.service.IUserService;
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,9 +30,9 @@ import java.util.Date;
 public class UserController
 {
 
-    private UserService userService;
+    private IUserService userService;
 
-    private JwtService jwtService;
+    private IJwtService jwtService;
 
     /**
      * Endpoint post para la creación de un usuario
@@ -72,19 +72,20 @@ public class UserController
 
     private String errorMessage(String message)
     {
-        return "{\"mensaje\": \"" + message + "\"";
+        return "{\"mensaje\": \"" + message + "\"}";
     }
 
     private UserResponseDto convertToDto(UserModel userModel)
     {
-        String token = userModel.getToken();
-        Date expiration = jwtService.extractExpiration(token);
-        Date issuedAt = jwtService.extractClaim(token, Claims::getIssuedAt);
         ModelMapper modelMapper = new ModelMapper();
-
         UserResponseDto userResponseDto = modelMapper.map(userModel, UserResponseDto.class);
+
+        String token = userModel.getToken();
+
+        Date issuedAt = jwtService.extractClaim(token, Claims::getIssuedAt);
         userResponseDto.setLastLogin(issuedAt);
-        userResponseDto.setActive(expiration.after(new Date()));
+
+        userResponseDto.setActive(jwtService.isTokenExpired(token));
 
         return  userResponseDto;
     }

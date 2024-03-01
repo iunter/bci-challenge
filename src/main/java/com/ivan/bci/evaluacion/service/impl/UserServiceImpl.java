@@ -1,15 +1,22 @@
-package com.ivan.bci.evaluacion.service;
+package com.ivan.bci.evaluacion.service.impl;
 
 import com.ivan.bci.evaluacion.model.PhoneModel;
 import com.ivan.bci.evaluacion.model.UserModel;
 import com.ivan.bci.evaluacion.dto.UserRequestDto;
 import com.ivan.bci.evaluacion.repository.IPhoneRepository;
+import com.ivan.bci.evaluacion.service.IJwtService;
+import com.ivan.bci.evaluacion.service.IUserService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.ivan.bci.evaluacion.repository.IUserRepository;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Date;
 import java.util.List;
@@ -17,7 +24,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserService
+public class UserServiceImpl implements IUserService
 {
 
 	@Autowired
@@ -27,7 +34,7 @@ public class UserService
 	private IPhoneRepository phoneRepository;
 
 	@Autowired
-	private JwtService jwtService;
+	private IJwtService jwtService;
 
 	private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
@@ -40,7 +47,8 @@ public class UserService
 	 * @return Usuario creado
 	 * @throws UserServiceException si hay un error (usuario ya existente, correo o password con formato inválido)
 	 */
-	public UserModel addUser(UserRequestDto userRequestDto)
+	@Override
+	public UserModel addUser(UserRequestDto userRequestDto) throws UserServiceException
 	{
 		UserModel userModel = userRepository.findByEmail(userRequestDto.getEmail());
 
@@ -93,9 +101,23 @@ public class UserService
 		return newUserModel;
 	}
 
-	class UserServiceException extends RuntimeException {
-		UserServiceException(String message) {
+	static class UserServiceException extends RuntimeException
+	{
+		UserServiceException(String message)
+		{
 			super(message);
+		}
+	}
+
+	@ControllerAdvice
+	class UserServiceAdvice
+	{
+		@ResponseBody
+		@ExceptionHandler(UserServiceException.class)
+		@ResponseStatus(HttpStatus.BAD_REQUEST)
+		String UserServiceExceptionHandler(UserServiceException ex)
+		{
+			return ex.getMessage();
 		}
 	}
 

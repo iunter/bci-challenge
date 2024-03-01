@@ -2,8 +2,9 @@ import com.ivan.bci.evaluacion.controller.UserController
 import com.ivan.bci.evaluacion.dto.UserResponseDto
 import com.ivan.bci.evaluacion.model.UserModel
 import com.ivan.bci.evaluacion.dto.UserRequestDto
-import com.ivan.bci.evaluacion.service.JwtService
-import com.ivan.bci.evaluacion.service.UserService
+import com.ivan.bci.evaluacion.service.IJwtService
+import com.ivan.bci.evaluacion.service.IUserService
+import com.ivan.bci.evaluacion.service.impl.UserServiceImpl
 import org.springframework.http.HttpStatus
 import spock.lang.Specification
 
@@ -12,8 +13,8 @@ class UserControllerTest extends Specification
 
     def "addUserTest"() {
         given:
-        def userService = Stub(UserService)
-        def jwtService = Stub(JwtService)
+        def userService = Stub(IUserService)
+        def jwtService = Stub(IJwtService)
 
         def expirationDate = new Date(System.currentTimeMillis() + 1000 * 60 * 30)
         def issuedAt = new Date()
@@ -43,6 +44,7 @@ class UserControllerTest extends Specification
         userService.addUser(userRequest) >> user
         jwtService.extractExpiration(_) >> expirationDate
         jwtService.extractClaim(_, _) >> issuedAt
+        jwtService.isTokenExpired(_) >> true
 
         def userController = new UserController(userService, jwtService)
 
@@ -56,8 +58,8 @@ class UserControllerTest extends Specification
 
     def "addUserErrorTest"() {
         given:
-        def userService = Stub(UserService)
-        def jwtService = Mock(JwtService)
+        def userService = Stub(IUserService)
+        def jwtService = Mock(IJwtService)
 
         UserController userController = new UserController(userService, jwtService)
         UserRequestDto userRequest = UserRequestDto.builder()
@@ -67,13 +69,13 @@ class UserControllerTest extends Specification
                 .phones(Collections.emptyList())
                 .build()
 
-        userService.addUser(_) >> {throw new Exception("Test")}
+        userService.addUser(_) >> {throw new UserServiceImpl.UserServiceException("Test")}
 
         when:
         def response = userController.newUser(userRequest)
 
         then:
-        response.getBody() == "{\"mensaje\": \"Test\""
+        response.getBody() == "{\"mensaje\": \"Test\"}"
         response.getStatusCode() == HttpStatus.BAD_REQUEST
     }
 }

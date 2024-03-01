@@ -3,8 +3,8 @@ import com.ivan.bci.evaluacion.model.UserModel
 import com.ivan.bci.evaluacion.dto.UserRequestDto
 import com.ivan.bci.evaluacion.repository.IUserRepository
 import com.ivan.bci.evaluacion.repository.IPhoneRepository
-import com.ivan.bci.evaluacion.service.JwtService
-import com.ivan.bci.evaluacion.service.UserService
+import com.ivan.bci.evaluacion.service.IJwtService
+import com.ivan.bci.evaluacion.service.impl.UserServiceImpl
 import spock.lang.Specification
 
 class UserServiceTest extends Specification
@@ -18,8 +18,8 @@ class UserServiceTest extends Specification
         given:
         def userRepository = Mock(IUserRepository)
         def phoneRepository = Mock(IPhoneRepository)
-        def jwtService = Mock(JwtService)
-        def userService = new UserService(userRepository, phoneRepository, jwtService, PASSWORD_REGEX)
+        def jwtService = Mock(IJwtService)
+        def userService = new UserServiceImpl(userRepository, phoneRepository, jwtService, PASSWORD_REGEX)
 
         def phone = PhoneModel.builder()
                 .cityCode(1)
@@ -49,8 +49,8 @@ class UserServiceTest extends Specification
         given:
         def userRepository = Mock(IUserRepository)
         def phoneRepository = Mock(IPhoneRepository)
-        def jwtService = Mock(JwtService)
-        def userService = new UserService(userRepository, phoneRepository, jwtService, PASSWORD_REGEX)
+        def jwtService = Mock(IJwtService)
+        def userService = new UserServiceImpl(userRepository, phoneRepository, jwtService, PASSWORD_REGEX)
 
         def phones = [
                 PhoneModel.builder()
@@ -87,8 +87,8 @@ class UserServiceTest extends Specification
         given:
         def userRepository = Mock(IUserRepository)
         def phoneRepository = Mock(IPhoneRepository)
-        def jwtService = Mock(JwtService)
-        def userService = new UserService(userRepository, phoneRepository, jwtService, PASSWORD_REGEX)
+        def jwtService = Mock(IJwtService)
+        def userService = new UserServiceImpl(userRepository, phoneRepository, jwtService, PASSWORD_REGEX)
 
         userRepository.findByEmail(_) >> new UserModel()
 
@@ -105,8 +105,8 @@ class UserServiceTest extends Specification
         given:
         def userRepository = Mock(IUserRepository)
         def phoneRepository = Mock(IPhoneRepository)
-        def jwtService = Mock(JwtService)
-        def userService = new UserService(userRepository, phoneRepository, jwtService, PASSWORD_REGEX)
+        def jwtService = Mock(IJwtService)
+        def userService = new UserServiceImpl(userRepository, phoneRepository, jwtService, PASSWORD_REGEX)
 
         when:
         userService.addUser(createRequest("Wrong_Email", "name", "password123", []))
@@ -121,8 +121,8 @@ class UserServiceTest extends Specification
         given:
         def userRepository = Mock(IUserRepository)
         def phoneRepository = Mock(IPhoneRepository)
-        def jwtService = Mock(JwtService)
-        def userService = new UserService(userRepository, phoneRepository, jwtService, PASSWORD_REGEX)
+        def jwtService = Mock(IJwtService)
+        def userService = new UserServiceImpl(userRepository, phoneRepository, jwtService, PASSWORD_REGEX)
 
         when:
         userService.addUser(createRequest("email@email.com", "name", "a", []))

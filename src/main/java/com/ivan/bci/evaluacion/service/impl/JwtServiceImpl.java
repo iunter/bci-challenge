@@ -1,6 +1,6 @@
-package com.ivan.bci.evaluacion.service;
+package com.ivan.bci.evaluacion.service.impl;
 
-import com.ivan.bci.evaluacion.model.UserModel;
+import com.ivan.bci.evaluacion.service.IJwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
-public class JwtService
+public class JwtServiceImpl implements IJwtService
 {
 	private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
@@ -26,21 +26,24 @@ public class JwtService
 	 * @param email del usuario para generar el token
 	 * @return token JWT para administrar la sesión del usuario
 	 */
+	@Override
 	public String generateToken(String email)
 	{
 		Map<String, Object> claims = new HashMap<>();
 		return createToken(claims, email);
 	}
 
-	public String extractEmail(String token)
-	{
-		return extractClaim(token, Claims::getSubject);
-	}
-
+	@Override
 	public <T> T extractClaim(String token, Function<Claims, T> claimsTFunction)
 	{
 		Claims claims = extractAllClaims(token);
 		return claimsTFunction.apply(claims);
+	}
+
+	@Override
+	public Boolean isTokenExpired(String token)
+	{
+		return extractExpiration(token).before(new Date());
 	}
 
 	public Date extractExpiration(String token)
@@ -71,15 +74,5 @@ public class JwtService
 	private Key getSignKey()
 	{
 		return Keys.hmacShaKeyFor(SECRET_KEY.getEncoded());
-	}
-
-	private Boolean isTokenExpired(String token)
-	{
-		return extractExpiration(token).before(new Date());
-	}
-
-	public Boolean validateToken(String token, UserModel userModel) {
-		final String email = extractEmail(token);
-		return (email.equals(userModel.getEmail()) && !isTokenExpired(token));
 	}
 }
