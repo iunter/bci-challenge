@@ -1,13 +1,16 @@
 import com.ivan.bci.evaluacion.controller.UserController
+import com.ivan.bci.evaluacion.controller.UserControllerAdvice
 import com.ivan.bci.evaluacion.dto.UserResponseDto
 import com.ivan.bci.evaluacion.model.UserModel
 import com.ivan.bci.evaluacion.dto.UserRequestDto
 import com.ivan.bci.evaluacion.service.IJwtService
 import com.ivan.bci.evaluacion.service.IUserService
 import com.ivan.bci.evaluacion.service.impl.UserServiceImpl
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import spock.lang.Specification
 
+@SpringBootTest(classes = UserControllerAdvice.class)
 class UserControllerTest extends Specification
 {
 
@@ -62,6 +65,7 @@ class UserControllerTest extends Specification
         def jwtService = Mock(IJwtService)
 
         UserController userController = new UserController(userService, jwtService)
+
         UserRequestDto userRequest = UserRequestDto.builder()
                 .email("email@email.com")
                 .name("name")
@@ -75,7 +79,6 @@ class UserControllerTest extends Specification
         def response = userController.newUser(userRequest)
 
         then:
-        response.getBody() == "{\"mensaje\": \"Test\"}"
-        response.getStatusCode() == HttpStatus.BAD_REQUEST
+        thrown UserServiceImpl.UserServiceException
     }
 }

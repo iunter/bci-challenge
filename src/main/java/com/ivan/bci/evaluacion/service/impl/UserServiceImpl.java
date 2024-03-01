@@ -10,13 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.ivan.bci.evaluacion.repository.IUserRepository;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Date;
 import java.util.List;
@@ -101,23 +96,11 @@ public class UserServiceImpl implements IUserService
 		return newUserModel;
 	}
 
-	static class UserServiceException extends RuntimeException
+	public static class UserServiceException extends RuntimeException
 	{
 		UserServiceException(String message)
 		{
 			super(message);
-		}
-	}
-
-	@ControllerAdvice
-	class UserServiceAdvice
-	{
-		@ResponseBody
-		@ExceptionHandler(UserServiceException.class)
-		@ResponseStatus(HttpStatus.BAD_REQUEST)
-		String UserServiceExceptionHandler(UserServiceException ex)
-		{
-			return ex.getMessage();
 		}
 	}
 
